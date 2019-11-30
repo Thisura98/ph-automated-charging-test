@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PayHere Preapproval and Charging API Test</title>
+    <meta charset="utf-8">
+
+    <!-- Bootstrap and JQuery -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Code Fragment Styling -->
+    <style>
+        .some-code {
+            background-color: ghostwhite;
+            padding: 10px;
+            border: 1px solid lightgray;
+            border-radius: 4px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+
+            overflow-x: auto;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .ending-para{
+            font-size: small;
+            padding: 25px;
+            background-color: rgba(160, 196, 243, 0.2);
+            margin-bottom: 8vh;
+        }
+    </style>
+
+    <script>
+        function doAuth() {
+            document.location = "./?method=chargeauth";
+        }
+        function doCharge() {
+            document.location = "./?method=chargingcharge";
+        }
+        function clearAllStates() {
+            document.location = "./?method=clearstates";
+        }
+        function clearLog() {
+            document.location = "./?method=clearlog"
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Automated Billing Test</h1>
+            <p class="lead">A PayHere Automated Charging API Testing Tool made for personal use.</p>
+            <hr class="my-4">
+            <p>Tests the PayHere <a href="https://support.payhere.lk/api-&-mobile-sdk/payhere-preapproval">Preapproval
+                    API</a> and <a href="https://support.payhere.lk/api-&-mobile-sdk/payhere-charging">Charging API</a>
+            </p>
+            <h4>How to use</h4>
+            <p>There are 3 steps for automated charging within PayHere. They are,</p>
+            <ol>
+                <li>Pre-approval - Customers have to go through a Checkout-Like process to approve their Credit cards for automated charging</li>
+                <li>Retrieve Access Token - Using our Authorization Code we have to get an OAuth Access Token to call the charging EndPoint. In this Example, this process is reffered to as "ChargeAuth"</li>
+                <li>Charge Customer - Does exactly what it says. Calls the third and final endpoint to charge the customer using a variable amount, order_id and item name.</li>
+            </ol>
+            <p>To control each of these 3 steps, you can use the 3 blue buttons. Use should click them in the order that they appear in (top to bottom and left to right). </p>
+            <p>If you need you can clear all the states and start over. The log section at the bottom is useful for tracking what happened which is also clear-able.</p>
+        </div>
+
+        <h3>Status
+            <span> <button type="button" class="btn btn-warning" onclick="clearAllStates()">Clear states</button></span>
+        </h3>
+        <hr>
+        <h5>Pre-approval</h5>
+        <pre><div class="some-code">{{status_preapproval}}</div></pre>
+        <h5>Charging - Auth</h5>
+        <pre><div class="some-code">{{status_charge_auth}}</div></pre>
+        <h5>Charging - Charge</h5>
+        <pre><div class="some-code">{{status_charge_charge}}</div></pre>
+        <br>
+
+        <h3>Pre-approval</h3>
+        <hr>
+        <html>
+
+        <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapse-preapproval"
+            style="margin-top: 10px; margin-bottom: 10px;">
+            Show Preapproval Form
+        </button>
+
+        <form method="post" action="https://sandbox.payhere.lk/pay/preapprove">
+            <div class="collapse" id="collapse-preapproval">
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Merchant ID</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="merchant_id" value="1211149">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Return URL</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="return_url"
+                            value="http://orangegrounds.space/test/preapproval/">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Cancel URL</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="cancel_url"
+                            value="http://orangegrounds.space/test/preapproval/">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Notify URL</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="notify_url"
+                            value="http://orangegrounds.space/test/preapproval/index.php?method=notifypreapprove">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Order ID</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="order_id" value="preapproval_1">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Items</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="items" value="Bill Payments">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Currency</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="currency" value="LKR">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Customer First Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="first_name" value="Bill">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Customer Last Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="last_name" value="Perri">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="email" value="thisura@bhasha.lk">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Phone</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="phone" value="0771234567">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="address" value="No.1, Galle Road">
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">City</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="city" value="galle">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Country</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="country" value="Sri Lanka">
+                    </div>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Preapprove</button>
+        </form>
+
+        </html>
+        <br>
+
+        <h3>Charging</h3>
+        <hr>
+        <button type="button" class="btn btn-primary" onclick="doAuth()">Perform Auth</button>
+        <button type="button" class="btn btn-primary" onclick="doCharge()">Perform Charge</button>
+        <br><br>
+
+        <h3>Log
+            <span> <button type="button" class="btn btn-warning" onclick="clearLog()">Clear log</button></span>
+        </h3>
+        </h3>
+
+        <hr>
+        <pre><div class="some-code">{{log}}</div></pre>
+        <br>
+
+        <h3>About</h3>
+        <hr>
+        <div class="ending-para">
+            <p>This example does not use Databases and only uses some text files. This is done to decrease the setup-time if you choose to run this example on your own server. However, you should <b>never</b> do this in a production environment. You will run into race-conditions when trying to write/read from this file from many PHP script instances.</p>
+            <br>
+            <p>Please feel free to fork, raise issues and submit pull requests to this github repo (the origin of this example).</p>
+        </div>
+    </div>
+</body>
+
+</html>
